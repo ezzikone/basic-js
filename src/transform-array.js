@@ -1,28 +1,39 @@
 module.exports = function transform(arr) {
-    if(!Array.isArray(arr)){
-        throw Error();
+    let string = Object.prototype.toString;
+    if (string.call(arr) !== '[object Array]') {
+        throw new Error()
     }
-    const tranformedArr = [];
-    for(var i=0; i< arr.length; i++){
-        if (arr[i] === '--discard-next' && i!== arr.length-1){
-            i++;
-        }
-        else if (arr[i] === '--discard-prev' && i!== 0) {
-            tranformedArr.pop();
-        }
-        else if(arr[i] === '--double-next' && i!== arr.length-1 ){
-            tranformedArr.push(arr[i+1]);
-        }
-        else if (arr[i] === '--double-prev' && i!== 0){
-            tranformedArr.push(arr[i-1]);
-        }
-        else if (arr[i] === '--discard-next' || arr[i] === '--discard-prev' || arr[i] === '--double-next' || arr[i] === '--double-prev'){
+    let newArr = [];
+    for (let i = 0; i < arr.length; i++) {
 
+        if (arr[i] === '--discard-next') {
+            i += 1
+            continue
         }
-        else{
-            tranformedArr.push(arr[i]);
+        if (arr[i] === '--discard-prev') {
+            if (i === 0) {
+                continue
+            }
+            newArr.pop()
+            continue
         }
+        if (arr[i] === '--double-next') {
+            if (i === arr.length - 1) {
+                continue
+            }
+            newArr.push(arr[i + 1])
+            continue
+        }
+        if (arr[i] === '--double-prev') {
+            if (i === 0  ) {
+                continue
+            }
+            newArr.push(arr[i-1]);
+            continue
+        }
+
+        newArr.push(arr[i])
     }
-    return tranformedArr;
+    return newArr
+}
 
-};
